@@ -84,6 +84,16 @@ function App() {
     console.log("Navigate to learn more section");
   };
 
+  const handleSignIn = () => {
+    // Navigate to sign in page
+    console.log("Navigate to sign in");
+  };
+
+  const handleSignUp = () => {
+    // Navigate to sign up page
+    console.log("Navigate to sign up");
+  };
+
   const customButtons = [
     { 
       title: "Get Started", 
@@ -99,6 +109,42 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Navbar */}
+      <nav className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <img 
+                  className="h-8 w-auto" 
+                  src="/logo.svg" 
+                  alt="PDF to Audio Logo" 
+                />
+                {/* If you don't have a logo yet, you can use text instead */}
+                {/* <span className="text-xl font-bold text-gray-900">PDF2Audio</span> */}
+              </div>
+            </div>
+            
+            {/* Navigation buttons */}
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={handleSignIn}
+                className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={handleSignUp}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Sign Up
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       {/* If you want to use a background image instead, replace the above with: */}
       {/* <div className="min-h-screen bg-cover bg-center bg-no-repeat" style={{backgroundImage: "url('your-image-url-here')"}}> */}
       <Header1 
