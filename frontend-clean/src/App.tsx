@@ -1,6 +1,9 @@
-import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
+// src/App.tsx
+import React, { useState } from 'react';
 
-// Landing Page Component
+// Import the components (you'll need to create separate files for these)
+import { MainApp } from './components/MainApp';
+
 type ImageProps = {
   src: string;
   alt?: string;
@@ -73,19 +76,42 @@ export const Header1Defaults: Props = {
   },
 };
 
-// Landing Page Component
-function LandingPage() {
-  const navigate = useNavigate();
+function App() {
+  const [currentView, setCurrentView] = useState<'landing' | 'app'>('landing');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleGetStarted = () => {
-    navigate('/signup');
+    // Skip authentication for now - go directly to app
+    setIsAuthenticated(true);
+    setCurrentView('app');
   };
 
   const handleLearnMore = () => {
-    // This would scroll to features section or navigate to about page
-    console.log("Navigate to learn more section");
+    // Scroll to features section or show more info
+    const featuresSection = document.getElementById('features');
+    if (featuresSection) {
+      featuresSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
+  const handleSignIn = () => {
+    // Skip authentication for now - go directly to app
+    setIsAuthenticated(true);
+    setCurrentView('app');
+  };
+
+  const handleSignUp = () => {
+    // Skip authentication for now - go directly to app
+    setIsAuthenticated(true);
+    setCurrentView('app');
+  };
+
+  // If user is in the app, show the main application
+  if (currentView === 'app') {
+    return <MainApp />;
+  }
+
+  // Otherwise show the landing page
   const customButtons = [
     { 
       title: "Get Started", 
@@ -101,6 +127,37 @@ function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Navbar */}
+      <nav className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <span className="text-xl font-bold text-gray-900">PDF2Audio</span>
+              </div>
+            </div>
+            
+            {/* Navigation buttons */}
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={handleSignIn}
+                className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={handleSignUp}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Sign Up
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
       <Header1 
         heading="Transform PDFs into Audio Files"
         description="Convert your PDF documents into high-quality audio files for easy listening. Perfect for accessibility, multitasking, or learning on the go. Sign up to get started with your first conversion."
@@ -111,28 +168,35 @@ function LandingPage() {
         }}
       />
       
-      {/* How It Works Section */}
-      <section className="px-[5%] py-16 bg-white/80 backdrop-blur-sm">
+      {/* Features section */}
+      <section id="features" className="px-[5%] py-16 bg-white/80 backdrop-blur-sm">
         <div className="container max-w-4xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-900">How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="p-6">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-blue-600 font-bold">1</span>
-              </div>
-              <h3 className="font-semibold mb-2">Sign Up</h3>
-              <p className="text-gray-600">Create your account to access the PDF to audio converter</p>
-            </div>
-            <div className="p-6">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <span className="text-blue-600 font-bold">2</span>
               </div>
               <h3 className="font-semibold mb-2">Upload PDF</h3>
               <p className="text-gray-600">Upload your PDF document to our secure platform</p>
             </div>
             <div className="p-6">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-blue-600 font-bold">2</span>
+              </div>
+              <h3 className="font-semibold mb-2">Select Pages</h3>
+              <p className="text-gray-600">Choose which pages to include in your audio file</p>
+            </div>
+            <div className="p-6">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-blue-600 font-bold">3</span>
+              </div>
+              <h3 className="font-semibold mb-2">Edit Text</h3>
+              <p className="text-gray-600">Review and edit the extracted text before conversion</p>
+            </div>
+            <div className="p-6">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-blue-600 font-bold">4</span>
               </div>
               <h3 className="font-semibold mb-2">Listen</h3>
               <p className="text-gray-600">Download your audio file and listen anywhere</p>
@@ -140,296 +204,70 @@ function LandingPage() {
           </div>
         </div>
       </section>
-    </div>
-  );
-}
 
-// Navigation Component
-function Navigation() {
-  const navigate = useNavigate();
-
-  const handleSignIn = () => {
-    navigate('/signin');
-  };
-
-  const handleSignUp = () => {
-    navigate('/signup');
-  };
-
-  return (
-    <nav className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0">
-              <span className="text-xl font-bold text-gray-900">PDF2Audio</span>
-            </Link>
-          </div>
-          
-          {/* Navigation buttons */}
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={handleSignIn}
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={handleSignUp}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Sign Up
-            </button>
+      {/* Features highlight */}
+      <section className="px-[5%] py-16 bg-gradient-to-r from-blue-600 to-indigo-700">
+        <div className="container max-w-4xl mx-auto text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-white">Why Choose PDF2Audio?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-white">
+            <div className="p-6">
+              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold mb-2">Secure & Private</h3>
+              <p className="text-blue-100">Your documents are processed securely and deleted after conversion</p>
+            </div>
+            <div className="p-6">
+              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold mb-2">Fast Processing</h3>
+              <p className="text-blue-100">Advanced algorithms ensure quick and accurate text extraction</p>
+            </div>
+            <div className="p-6">
+              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12 5.5L9 19z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold mb-2">High Quality Audio</h3>
+              <p className="text-blue-100">Crystal clear voice synthesis with natural pronunciation</p>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
-  );
-}
+      </section>
 
-// Sign Up Page Component
-function SignUpPage() {
-  const navigate = useNavigate();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle sign up logic here
-    console.log("Sign up form submitted");
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <Navigation />
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
-          <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-              Create your account
-            </h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
-              Already have an account?{' '}
-              <button
-                onClick={() => navigate('/signin')}
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                Sign in
-              </button>
-            </p>
-          </div>
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                  First Name
-                </label>
-                <input
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  required
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="First Name"
-                />
-              </div>
-              <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                  Last Name
-                </label>
-                <input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  required
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Last Name"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Email address"
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Password"
-                />
-              </div>
-              <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                  Confirm Password
-                </label>
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Confirm password"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center">
-              <input
-                id="terms"
-                name="terms"
-                type="checkbox"
-                required
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
-                I agree to the{' '}
-                <a href="#" className="text-blue-600 hover:text-blue-500">
-                  Terms of Service
-                </a>{' '}
-                and{' '}
-                <a href="#" className="text-blue-600 hover:text-blue-500">
-                  Privacy Policy
-                </a>
-              </label>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                Create Account
-              </button>
-            </div>
-          </form>
+      {/* CTA Section */}
+      <section className="px-[5%] py-16 bg-white">
+        <div className="container max-w-2xl mx-auto text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-900">Ready to Get Started?</h2>
+          <p className="text-lg text-gray-600 mb-8">
+            Join thousands of users who have already converted their PDFs to audio. 
+            It's free to try with your first document.
+          </p>
+          <button
+            onClick={handleGetStarted}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-medium transition-colors"
+          >
+            Start Converting Now
+          </button>
         </div>
-      </div>
-    </div>
-  );
-}
+      </section>
 
-// Sign In Page Component
-function SignInPage() {
-  const navigate = useNavigate();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle sign in logic here
-    console.log("Sign in form submitted");
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <Navigation />
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
-          <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-              Sign in to your account
-            </h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
-              Don't have an account?{' '}
-              <button
-                onClick={() => navigate('/signup')}
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                Sign up
-              </button>
-            </p>
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold mb-4">PDF2Audio</h3>
+            <p className="text-gray-400">Converting documents to audio, making content accessible for everyone.</p>
           </div>
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Email address"
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Password"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Remember me
-                </label>
-              </div>
-
-              <div className="text-sm">
-                <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                  Forgot your password?
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                Sign in
-              </button>
-            </div>
-          </form>
         </div>
-      </div>
+      </footer>
     </div>
-  );
-}
-
-// Main App Component with Router
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/signin" element={<SignInPage />} />
-      </Routes>
-    </BrowserRouter>
   );
 }
 
