@@ -1,15 +1,20 @@
 from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.routers import DefaultRouter
+from . import views
+
+# API routes
+router = DefaultRouter()
+router.register(r'documents', views.PDFDocumentViewSet, basename='pdfdocument')
+router.register(r'processed', views.ProcessedDocumentViewSet, basename='processeddocument')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/account/', include('account.urls')),
-    path('api/converter/', include('converter.urls')),
+    # API routes
+    path('api/', include(router.urls)),
+    
+    # Legacy routes (deprecated - return helpful messages)
+    path('upload/', views.upload_pdf, name='upload'),
+    path('select/<uuid:file_id>/', views.select_pages, name='select_pages'),
+    path('edit/<uuid:file_id>/', views.edit_text, name='edit_text'),
+    path('generate/<uuid:file_id>/', views.generate_audio, name='generate_audio'),
+    path('play/<uuid:audio_id>/', views.play_audio, name='play_audio'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
